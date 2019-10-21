@@ -25,12 +25,6 @@ class UserProvider with ChangeNotifier {
     } else {
       _user = firebaseUser;
       _status = status.Authenticated;
-      await db.collection("books")
-          .document("1")
-          .setData({
-        'title': 'Mastering Flutter',
-        'description': 'Programming Guide for Dart'
-      });
     }
     notifyListeners();
   }
