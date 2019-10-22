@@ -47,6 +47,7 @@ class UserProvider with ChangeNotifier {
      final AuthResult =  await _auth.signInWithCredential(credential);
       FirebaseUser _user = AuthResult.user;
       _currentuser = await _auth.currentUser();
+      upadate(user);
       //addUsers();
       notifyListeners();
       return "$_user";
@@ -64,4 +65,10 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
     return Future.delayed(Duration.zero);
   }
+  void upadate(FirebaseUser user) async{
+    DocumentReference  ref = db.collection('users').document(user.uid);
+   return   ref.setData({
+        'title':user.displayName,
+      },merge: true);
+    }
 }

@@ -19,16 +19,14 @@ class products_main_page extends StatefulWidget {
 
 class _products_main_pageState extends State<products_main_page> {
   var showFavour = false;
-  Firestore db = Firestore.instance;
+ // final db = Firestore.instance;
 
   @override
   Widget build(BuildContext context) {
 
     var s = Provider.of<Products_list>(context, listen: false);
     var user = Provider.of<UserProvider>(context);
-    db.collection('users').document(user.user.displayName).setData({
-      'name':user.user.displayName,
-    });
+
     // TODO: implement build
     return Scaffold(
       drawer: Drawer(
@@ -120,7 +118,7 @@ class _products_main_pageState extends State<products_main_page> {
             ),
             ListTile(
               leading: Icon(
-                Icons.trip_origin,
+                Icons.shop_two,
                 size: 30,
               ),
               title: Text(
