@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 enum status { Unintialized, Authenticated, Authenticating, Unauthenticated }
-
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
   FirebaseUser _user;
@@ -12,13 +10,11 @@ class UserProvider with ChangeNotifier {
   GoogleSignIn _googleSignIn;
   status _status = status.Unintialized;
   Firestore db = Firestore.instance;
-
   UserProvider.instance()
-      : _auth = FirebaseAuth.instance,
+      :_auth = FirebaseAuth.instance,
         _googleSignIn = GoogleSignIn() {
-    _auth.onAuthStateChanged.listen(_onAuthStateChanged);
+      _auth.onAuthStateChanged.listen(_onAuthStateChanged);
   }
-
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _status = status.Unauthenticated;
@@ -28,13 +24,9 @@ class UserProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
   status get statuss => _status;
-
   FirebaseUser get user => _user;
-
   FirebaseUser get currentuser => _currentuser;
-
   Future<String> signInWithGoogle() async {
     try {
       _status = status.Authenticating;
@@ -49,10 +41,10 @@ class UserProvider with ChangeNotifier {
       final AuthResult = await _auth.signInWithCredential(credential);
       FirebaseUser _user = AuthResult.user;
       _currentuser = await _auth.currentUser();
-//      upadate(user);
       //addUsers();
       //
       notifyListeners();
+      update(user);
       return "$_user";
     } catch (e) {
       print(e);
@@ -61,7 +53,6 @@ class UserProvider with ChangeNotifier {
       return "no user";
     }
   }
-
   Future signOut() async {
     _auth.signOut();
     _googleSignIn.signOut();
@@ -69,6 +60,9 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
     return Future.delayed(Duration.zero);
   }
-
-
+void update(FirebaseUser user) async {
+   final ref = await db.collection('users').document(user.uid).setData({
+      'user':user.displayName
+    });
+}
 }
