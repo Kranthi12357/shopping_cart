@@ -51,6 +51,7 @@ class UserProvider with ChangeNotifier {
       _currentuser = await _auth.currentUser();
 //      upadate(user);
       //addUsers();
+      //
       notifyListeners();
       return "$_user";
     } catch (e) {
